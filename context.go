@@ -29,7 +29,7 @@ func NewLimeClient(apiKey string, timeout time.Duration, httpClient *http.Client
 	return
 }
 
-func (client *LimeClient) do(method string, args url.Values, endpoint ...string) ([]byte, error) {
+func do[T any](client *LimeClient, method string, args url.Values, endpoint ...string) (out T, err error) {
 	u := url.URL{
 		Scheme:   "https",
 		Host:     "api.lime.co",
@@ -38,7 +38,7 @@ func (client *LimeClient) do(method string, args url.Values, endpoint ...string)
 	}
 	req, err := http.NewRequest(method, u.String(), nil)
 	if err != nil {
-		return nil, err
+		return
 	}
 
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", client.apiKey))
@@ -47,10 +47,17 @@ func (client *LimeClient) do(method string, args url.Values, endpoint ...string)
 
 	resp, err := client.httpClient.Do(req)
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	return io.ReadAll(resp.Body)
+	bits, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return
+	}
+
+	err = json.Unmarshal(bits, &out)
+
+	return
 }
 
 func (client *LimeClient) GetAccountBalances() (out chan []Account, e chan error) {
@@ -61,18 +68,9 @@ func (client *LimeClient) GetAccountBalances() (out chan []Account, e chan error
 		defer close(out)
 		defer close(e)
 
-		bytes, err := client.do("GET", nil, "accounts")
+		a, err := do[[]Account](client, "GET", nil, "accounts")
 		if err != nil {
 			e <- err
-			return
-		}
-
-		var a []Account
-
-		err = json.Unmarshal(bytes, &a)
-		if err != nil {
-			e <- err
-			return
 		}
 
 		out <- a
@@ -89,17 +87,10 @@ func (client *LimeClient) GetAccountPositions(accountNumber uint, date time.Time
 		defer close(out)
 		defer close(e)
 
-		bytes, err := client.do("GET", url.Values{
+		a, err := do[[]StockPosition](client, "GET", url.Values{
 			"date": []string{date.String()},
 		}, "accounts", fmt.Sprintf("%v", accountNumber))
-		if err != nil {
-			e <- err
-			return
-		}
 
-		var a []StockPosition
-
-		err = json.Unmarshal(bytes, &a)
 		if err != nil {
 			e <- err
 			return
@@ -119,20 +110,12 @@ func (client *LimeClient) GetTransactionJournal(accountNumber uint, start, end t
 		defer close(out)
 		defer close(e)
 
-		bytes, err := client.do("GET", url.Values{
+		a, err := do[TransactionsJournal](client, "GET", url.Values{
 			"startDate": []string{start.String()},
 			"endDate":   []string{end.String()},
 			"limit":     []string{fmt.Sprintf("%v", limit)},
 			"skip":      []string{fmt.Sprintf("%v", skip)},
 		}, "accounts", fmt.Sprintf("%v", accountNumber), "transactions")
-		if err != nil {
-			e <- err
-			return
-		}
-
-		var a TransactionsJournal
-
-		err = json.Unmarshal(bytes, &a)
 		if err != nil {
 			e <- err
 			return
