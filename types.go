@@ -16,7 +16,7 @@ type Account struct {
 	CashToWithdraw        float64 `json:"cash_to_withdraw"`
 }
 
-type Stock struct {
+type StockPosition struct {
 	Symbol           string  `json:"symbol"`
 	Quantity         int     `json:"quantity"`
 	AverageOpenPrice float64 `json:"average_open_price"`
@@ -63,4 +63,14 @@ type Fee struct {
 type TransactionData struct {
 	Transactions []Transaction `json:"transactions"`
 	Count        int           `json:"count"`
+}
+
+type Trades struct {
+	Trades []Trade `json:"trades"`
+	Count  uint    `json:"count"`
+}
+
+type TransactionsJournal struct {
+	Transactions []Transaction `json:"transactions"`
+	Count        uint          `json:"count"`
 }
