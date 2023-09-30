@@ -3,7 +3,7 @@ package limecosdk
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"path"
@@ -50,7 +50,7 @@ func (client *LimeClient) do(method string, args url.Values, endpoint ...string)
 		return nil, err
 	}
 
-	return ioutil.ReadAll(resp.Body)
+	return io.ReadAll(resp.Body)
 }
 
 func (client *LimeClient) GetAccountBalances() (out chan []Account, e chan error) {
