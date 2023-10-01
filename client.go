@@ -14,11 +14,13 @@ import (
 	"nhooyr.io/websocket"
 )
 
+// Represents a Lime.co client connection
 type LimeClient struct {
 	httpClient *http.Client
 	apiKey     string
 }
 
+// Create a new Lime.co client
 func NewLimeClient(apiKey string, timeout time.Duration, httpClient *http.Client) (client *LimeClient) {
 	client.apiKey = apiKey
 
@@ -87,10 +89,12 @@ func connect[S ~string](client *LimeClient, endpoint string) (out *LiveMarketDat
 	return
 }
 
+// Creates a websocket connection to collect market data and stock changes
 func (client *LimeClient) ConnectToMarketData() (out *LiveMarketData[MarketDataAction], err error) {
 	return connect[MarketDataAction](client, "marketData")
 }
 
+// Creates a websocket connection for notifications about your accounts
 func (client *LimeClient) ConnectToAccountsFeed() (out *LiveMarketData[AccountDataAction], err error) {
 	return connect[AccountDataAction](client, "accounts")
 }

@@ -6,6 +6,7 @@ import (
 	"nhooyr.io/websocket"
 )
 
+// All your information about an account
 type Account struct {
 	AccountNumber         string  `json:"account_number"`
 	TradePlatform         string  `json:"trade_platform"`
@@ -22,6 +23,7 @@ type Account struct {
 	CashToWithdraw        float64 `json:"cash_to_withdraw"`
 }
 
+// Your position with a stock
 type StockPosition struct {
 	Symbol           string  `json:"symbol"`
 	Quantity         int     `json:"quantity"`
@@ -30,6 +32,7 @@ type StockPosition struct {
 	SecurityType     string  `json:"security_type"`
 }
 
+// Represents a trade
 type Trade struct {
 	Symbol    string  `json:"symbol"`
 	Timestamp int64   `json:"timestamp"`
@@ -39,6 +42,7 @@ type Trade struct {
 	Side      string  `json:"side"`
 }
 
+// Represents a transaction
 type Transaction struct {
 	ID          string           `json:"id"`
 	Type        string           `json:"type"`
@@ -49,6 +53,7 @@ type Transaction struct {
 	Fees        []TransactionFee `json:"fees"`
 }
 
+// Represents an asset you own
 type Asset struct {
 	Symbol            string  `json:"symbol"`
 	SymbolDescription string  `json:"symbol_description"`
@@ -56,36 +61,43 @@ type Asset struct {
 	Price             float64 `json:"price"`
 }
 
+// Cash amounts
 type Cash struct {
 	GrossAmount float64 `json:"gross_amount"`
 	NetAmount   float64 `json:"net_amount"`
 }
 
+// Transaction fee information
 type TransactionFee struct {
 	Name   string  `json:"name"`
 	Amount float64 `json:"amount"`
 }
 
+// Information about your transactions
 type TransactionData struct {
 	Transactions []Transaction `json:"transactions"`
 	Count        int           `json:"count"`
 }
 
+// Information about your trades
 type Trades struct {
 	Trades []Trade `json:"trades"`
 	Count  uint    `json:"count"`
 }
 
+// A journal record of your transactions
 type TransactionsJournal struct {
 	Transactions []Transaction `json:"transactions"`
 	Count        uint          `json:"count"`
 }
 
+// Status of an order
 type OrderStatus struct {
 	Success bool   `json:"success"`
 	Data    string `json:"data"`
 }
 
+// Represents an order to submit
 type Order struct {
 	AccountNumber string  `json:"account_number"`
 	Symbol        string  `json:"symbol"`
@@ -97,11 +109,13 @@ type Order struct {
 	Exchange      string  `json:"exchange"`
 }
 
+// Is action valid
 type ValidationStatus struct {
 	IsValid bool   `json:"is_valid"`
 	Message string `json:"validation_message"`
 }
 
+// Details about an order
 type OrderDetails struct {
 	AccountNumber string  `json:"account_number"`
 	Symbol        string  `json:"symbol"`
@@ -113,11 +127,13 @@ type OrderDetails struct {
 	Exchange      string  `json:"exchange"`
 }
 
+// Fee estimation
 type EstimatedFee struct {
 	Type   string  `json:"type"`
 	Amount float64 `json:"amount"`
 }
 
+// Information about a quote
 type Quote struct {
 	Symbol            string  `json:"symbol"`
 	Ask               float64 `json:"ask"`
@@ -145,43 +161,51 @@ type Quote struct {
 	Vega              float64 `json:"vega"`
 }
 
+// When you're allowed to trade
 type Schedule struct {
 	Session string `json:"session"`
 }
 
+// Information about a symbol
 type Symbol struct {
 	Symbol      string `json:"symbol"`
 	Description string `json:"description"`
 }
 
+// Results of a symbol lookup
 type SymbolLookupResults struct {
 	Securities []Symbol `json:"securities"`
 	Count      uint     `json:"count"`
 }
 
+// Information about an options series
 type OptionSeries struct {
 	Series      string      `json:"series"`
 	Expirations []time.Time `json:"expirations"`
 	Size        uint        `json:"contract_size"`
 }
 
+// An item in a chain of options
 type OptionSeriesChainItem struct {
 	Symbol string `json:"symbol"`
 	Type   string `json:"type"`
 	Strike uint   `json:"strike"`
 }
 
+// Information about your options
 type OptionSeriesChain struct {
 	Size  uint                    `json:"contract_size"`
 	Style string                  `json:"style"`
 	Chain []OptionSeriesChainItem `json:"chain"`
 }
 
+// A directive about an account
 type Directive struct {
 	Action  string `json:"action"`
 	Account string `json:"account"`
 }
 
+// Information about a position
 type PositionData struct {
 	Symbol           string  `json:"symbol"`
 	AverageOpenPrice float64 `json:"average_open_price"`
@@ -191,6 +215,7 @@ type PositionData struct {
 	Account          string  `json:"account"`
 }
 
+// Information about your balance
 type BalanceData struct {
 	AccountNumber        uint    `json:"account_number"`
 	TradePlatform        string  `json:"trade_platform"`
@@ -205,6 +230,7 @@ type BalanceData struct {
 	CashToWithdraw       float64 `json:"cash_to_withdraw"`
 }
 
+// Information about an order
 type OrderData struct {
 	AccountNumber     string  `json:"account_number"`
 	ClientID          string  `json:"client_id"`
@@ -223,6 +249,7 @@ type OrderData struct {
 	ExecutedTimestamp int64   `json:"executed_timestamp"`
 }
 
+// Information about a trade
 type TradeData struct {
 	AccountNumber string  `json:"account_number"`
 	Symbol        string  `json:"symbol"`
@@ -233,11 +260,13 @@ type TradeData struct {
 	Side          string  `json:"side"`
 }
 
+// A connection to the market
 type LiveMarketData[ActionType ~string] struct {
 	client *LimeClient
 	ws     *websocket.Conn
 }
 
+// Market data update
 type MarketData struct {
 	Type             string  `json:"t"`
 	Symbol           string  `json:"s"`
@@ -258,11 +287,13 @@ type MarketData struct {
 	Volume           int     `json:"v,omitempty"`
 }
 
+// Sends an action on an account data connection
 type AccountDataActionCommand struct {
 	Action  AccountDataAction `json:"action"`
 	Account string            `json:"account"`
 }
 
+// Send an action on a market data connection
 type MarketDataActionCommand struct {
 	Action  MarketDataAction `json:"action"`
 	Symbols []string         `json:"symbols"`
