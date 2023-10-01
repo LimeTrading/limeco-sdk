@@ -22,6 +22,8 @@ type LimeClient struct {
 
 // Create a new Lime.co client
 func NewLimeClient(apiKey string, timeout time.Duration, httpClient *http.Client) (client *LimeClient) {
+	client = new(LimeClient)
+
 	client.apiKey = apiKey
 
 	if httpClient == nil {
