@@ -206,13 +206,17 @@ type Directive struct {
 }
 
 // Information about a position
-type PositionData struct {
+type PositionDataItem struct {
 	Symbol           string  `json:"symbol"`
 	AverageOpenPrice float64 `json:"average_open_price"`
 	CurrentPrice     float64 `json:"current_price"`
 	Quantity         int     `json:"quantity"`
 	SecurityType     string  `json:"security_type"`
-	Account          string  `json:"account"`
+}
+
+type PositionData struct {
+	Account   string             `json:"account"`
+	Positions []PositionDataItem `json:"positions"`
 }
 
 // Information about your balance
@@ -297,4 +301,9 @@ type AccountDataActionCommand struct {
 type MarketDataActionCommand struct {
 	Action  MarketDataAction `json:"action"`
 	Symbols []string         `json:"symbols"`
+}
+
+type rawAccountData struct {
+	Type string     `json:"t"`
+	Data []struct{} `json:"data"`
 }
