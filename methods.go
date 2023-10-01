@@ -7,6 +7,7 @@ import (
 	"time"
 )
 
+// https://docs.lime.co/trader/accounts/
 func (client *LimeClient) GetAccountBalances() (out chan []Account, e chan error) {
 	out = make(chan []Account)
 	e = make(chan error)
@@ -26,6 +27,7 @@ func (client *LimeClient) GetAccountBalances() (out chan []Account, e chan error
 	return
 }
 
+// https://docs.lime.co/trader/accounts/get-account-positions
 func (client *LimeClient) GetAccountPositions(accountNumber uint, date time.Time) (out chan []StockPosition, e chan error) {
 	out = make(chan []StockPosition)
 	e = make(chan error)
@@ -52,6 +54,7 @@ func (client *LimeClient) GetAccountPositions(accountNumber uint, date time.Time
 	return
 }
 
+// https://docs.lime.co/trader/accounts/get-account-trades
 func (client *LimeClient) GetTransactionJournal(accountNumber uint, start, end time.Time, limit, skip uint) (out chan TransactionsJournal, e chan error) {
 	out = make(chan TransactionsJournal)
 	e = make(chan error)
@@ -79,6 +82,7 @@ func (client *LimeClient) GetTransactionJournal(accountNumber uint, start, end t
 	return
 }
 
+// https://docs.lime.co/trader/trading/
 func (client *LimeClient) PlaceOrder(order Order) (out chan OrderStatus, e chan error) {
 	out = make(chan OrderStatus)
 	e = make(chan error)
@@ -105,6 +109,7 @@ func (client *LimeClient) PlaceOrder(order Order) (out chan OrderStatus, e chan 
 	return
 }
 
+// https://docs.lime.co/trader/trading/validate-order
 func (client *LimeClient) ValidateOrder(order Order) (out chan ValidationStatus, e chan error) {
 	out = make(chan ValidationStatus)
 	e = make(chan error)
@@ -132,6 +137,7 @@ func (client *LimeClient) ValidateOrder(order Order) (out chan ValidationStatus,
 	return
 }
 
+// https://docs.lime.co/trader/trading/get-order-details
 func (client *LimeClient) GetOrderDetails(orderId string) (out chan OrderDetails, e chan error) {
 	out = make(chan OrderDetails)
 	e = make(chan error)
@@ -152,6 +158,7 @@ func (client *LimeClient) GetOrderDetails(orderId string) (out chan OrderDetails
 	return
 }
 
+// https://docs.lime.co/trader/trading/get-active-orders
 func (client *LimeClient) GetActiveOrders(accountNumber uint) (out chan []OrderDetails, e chan error) {
 	out = make(chan []OrderDetails)
 	e = make(chan error)
@@ -172,6 +179,7 @@ func (client *LimeClient) GetActiveOrders(accountNumber uint) (out chan []OrderD
 	return
 }
 
+// https://docs.lime.co/trader/trading/cancel-order
 func (client *LimeClient) CancelOrder(orderId uint) (out chan OrderStatus, e chan error) {
 	out = make(chan OrderStatus)
 	e = make(chan error)
@@ -192,6 +200,7 @@ func (client *LimeClient) CancelOrder(orderId uint) (out chan OrderStatus, e cha
 	return
 }
 
+// https://docs.lime.co/trader/trading/estimate-fee-charges
 func (client *LimeClient) EstimateFees(order Order) (out chan []EstimatedFee, e chan error) {
 	out = make(chan []EstimatedFee)
 	e = make(chan error)
@@ -212,6 +221,7 @@ func (client *LimeClient) EstimateFees(order Order) (out chan []EstimatedFee, e 
 	return
 }
 
+// https://docs.lime.co/trader/market-data/get-current-quote-array
 func (client *LimeClient) GetQuotes(symbols []string) (out chan []Quote, e chan error) {
 	out = make(chan []Quote)
 	e = make(chan error)
@@ -232,6 +242,7 @@ func (client *LimeClient) GetQuotes(symbols []string) (out chan []Quote, e chan 
 	return
 }
 
+// https://docs.lime.co/trader/market-data/get-quotes-history
 func (client *LimeClient) GetQuoteHistory(symbol, period string, start, end time.Time) (out chan []Quote, e chan error) {
 	out = make(chan []Quote)
 	e = make(chan error)
@@ -259,6 +270,7 @@ func (client *LimeClient) GetQuoteHistory(symbol, period string, start, end time
 	return
 }
 
+// https://docs.lime.co/trader/market-data/get-trading-schedule
 func (client *LimeClient) GetSchedule() (out chan Schedule, e chan error) {
 	out = make(chan Schedule)
 	e = make(chan error)
@@ -279,6 +291,7 @@ func (client *LimeClient) GetSchedule() (out chan Schedule, e chan error) {
 	return
 }
 
+// https://docs.lime.co/trader/market-data/lookup-securities
 func (client *LimeClient) LookupSecurities(partialSymbol string, limit uint) (out chan SymbolLookupResults, e chan error) {
 	out = make(chan SymbolLookupResults)
 	e = make(chan error)
@@ -304,6 +317,7 @@ func (client *LimeClient) LookupSecurities(partialSymbol string, limit uint) (ou
 	return
 }
 
+// https://docs.lime.co/trader/market-data/get-option-series
 func (client *LimeClient) GetOptionSeries(symbol string) (out chan []OptionSeries, e chan error) {
 	out = make(chan []OptionSeries)
 	e = make(chan error)
@@ -324,6 +338,7 @@ func (client *LimeClient) GetOptionSeries(symbol string) (out chan []OptionSerie
 	return
 }
 
+// https://docs.lime.co/trader/market-data/get-option-chain
 func (client *LimeClient) GetOptionChain(symbol, series string, expiration time.Time) (out chan OptionSeriesChain, e chan error) {
 	out = make(chan OptionSeriesChain)
 	e = make(chan error)
