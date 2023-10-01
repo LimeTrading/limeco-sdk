@@ -94,7 +94,7 @@ func connect[S any](client *LimeClient, endpoint string) (out *LiveMarketData[S]
 
 // Creates a websocket connection to collect market data and stock changes
 func (client *LimeClient) ConnectToMarketData() (out *LiveMarketData[MarketDataActionCommand], err error) {
-	return connect[MarketDataActionCommand](client, "marketData")
+	return connect[MarketDataActionCommand](client, "marketdata")
 }
 
 // // Creates a websocket connection for notifications about your accounts
