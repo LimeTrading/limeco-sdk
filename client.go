@@ -1,6 +1,7 @@
 package limecosdk
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -11,7 +12,7 @@ import (
 )
 
 type LimeClient struct {
-	httpClient http.Client
+	httpClient *http.Client
 	apiKey     string
 }
 
@@ -19,9 +20,9 @@ func NewLimeClient(apiKey string, timeout time.Duration, httpClient *http.Client
 	client.apiKey = apiKey
 
 	if httpClient == nil {
-		client.httpClient = *http.DefaultClient
+		client.httpClient = http.DefaultClient
 	} else {
-		client.httpClient = *httpClient
+		client.httpClient = httpClient
 	}
 
 	client.httpClient.Timeout = timeout
@@ -29,14 +30,20 @@ func NewLimeClient(apiKey string, timeout time.Duration, httpClient *http.Client
 	return
 }
 
-func do[T any](client *LimeClient, method string, args url.Values, endpoint ...string) (out T, err error) {
+func httpDo[B, R any](client *LimeClient, method string, args url.Values, body B, endpoint ...string) (out R, err error) {
 	u := url.URL{
 		Scheme:   "https",
 		Host:     "api.lime.co",
 		Path:     path.Join(endpoint...),
 		RawQuery: args.Encode(),
 	}
-	req, err := http.NewRequest(method, u.String(), nil)
+
+	bits, err := json.Marshal(body)
+	if err != nil {
+		return
+	}
+
+	req, err := http.NewRequest("GET", u.String(), bytes.NewReader(bits))
 	if err != nil {
 		return
 	}
@@ -50,79 +57,12 @@ func do[T any](client *LimeClient, method string, args url.Values, endpoint ...s
 		return
 	}
 
-	bits, err := io.ReadAll(resp.Body)
+	bits, err = io.ReadAll(resp.Body)
 	if err != nil {
 		return
 	}
 
 	err = json.Unmarshal(bits, &out)
-
-	return
-}
-
-func (client *LimeClient) GetAccountBalances() (out chan []Account, e chan error) {
-	out = make(chan []Account)
-	e = make(chan error)
-
-	go func() {
-		defer close(out)
-		defer close(e)
-
-		a, err := do[[]Account](client, "GET", nil, "accounts")
-		if err != nil {
-			e <- err
-		}
-
-		out <- a
-	}()
-
-	return
-}
-
-func (client *LimeClient) GetAccountPositions(accountNumber uint, date time.Time) (out chan []StockPosition, e chan error) {
-	out = make(chan []StockPosition)
-	e = make(chan error)
-
-	go func() {
-		defer close(out)
-		defer close(e)
-
-		a, err := do[[]StockPosition](client, "GET", url.Values{
-			"date": []string{date.String()},
-		}, "accounts", fmt.Sprintf("%v", accountNumber))
-
-		if err != nil {
-			e <- err
-			return
-		}
-
-		out <- a
-	}()
-
-	return
-}
-
-func (client *LimeClient) GetTransactionJournal(accountNumber uint, start, end time.Time, limit, skip uint) (out chan TransactionsJournal, e chan error) {
-	out = make(chan TransactionsJournal)
-	e = make(chan error)
-
-	go func() {
-		defer close(out)
-		defer close(e)
-
-		a, err := do[TransactionsJournal](client, "GET", url.Values{
-			"startDate": []string{start.String()},
-			"endDate":   []string{end.String()},
-			"limit":     []string{fmt.Sprintf("%v", limit)},
-			"skip":      []string{fmt.Sprintf("%v", skip)},
-		}, "accounts", fmt.Sprintf("%v", accountNumber), "transactions")
-		if err != nil {
-			e <- err
-			return
-		}
-
-		out <- a
-	}()
 
 	return
 }
