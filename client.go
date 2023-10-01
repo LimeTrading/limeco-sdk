@@ -72,7 +72,7 @@ func httpDo[B, R any](client *LimeClient, method string, args url.Values, body B
 	return
 }
 
-func connect[S ~string](client *LimeClient, endpoint string) (out *LiveMarketData[S], err error) {
+func connect[S any](client *LimeClient, endpoint string) (out *LiveMarketData[S], err error) {
 	out.client = client
 
 	ctx, cancel := context.WithTimeout(context.Background(), client.httpClient.Timeout)
@@ -90,11 +90,11 @@ func connect[S ~string](client *LimeClient, endpoint string) (out *LiveMarketDat
 }
 
 // Creates a websocket connection to collect market data and stock changes
-func (client *LimeClient) ConnectToMarketData() (out *LiveMarketData[MarketDataAction], err error) {
-	return connect[MarketDataAction](client, "marketData")
+func (client *LimeClient) ConnectToMarketData() (out *LiveMarketData[MarketDataActionCommand], err error) {
+	return connect[MarketDataActionCommand](client, "marketData")
 }
 
-// Creates a websocket connection for notifications about your accounts
-func (client *LimeClient) ConnectToAccountsFeed() (out *LiveMarketData[AccountDataAction], err error) {
-	return connect[AccountDataAction](client, "accounts")
-}
+// // Creates a websocket connection for notifications about your accounts
+// func (client *LimeClient) ConnectToAccountsFeed() (out *LiveMarketData[AccountDataActionCommand], err error) {
+// 	return connect[AccountDataActionCommand](client, "accounts")
+// }
