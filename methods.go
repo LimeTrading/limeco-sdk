@@ -55,6 +55,34 @@ func (client *LimeClient) GetAccountPositions(accountNumber uint, date time.Time
 }
 
 // https://docs.lime.co/trader/accounts/get-account-trades
+func (client *LimeClient) GetAccountTrades(accountNumber uint, date time.Time, limit, skip uint) (out chan []StockPosition, e chan error) {
+	out = make(chan []StockPosition)
+	e = make(chan error)
+
+	go func() {
+		defer close(out)
+		defer close(e)
+
+		u := url.Values{
+			"limit": []string{fmt.Sprintf("%v", limit)},
+			"skip":  []string{fmt.Sprintf("%v", skip)},
+		}
+
+		// a, err := httpDo[[]StockPosition](client, "GET", u, nil, "accounts", fmt.Sprintf("%v", accountNumber))
+		a, err := httpDo[any, []StockPosition](client, "GET", u, nil, "accounts", fmt.Sprintf("%v", accountNumber))
+
+		if err != nil {
+			e <- err
+			return
+		}
+
+		out <- a
+	}()
+
+	return
+}
+
+// https://docs.lime.co/trader/accounts/get-account-trades
 func (client *LimeClient) GetTransactionJournal(accountNumber uint, start, end time.Time, limit, skip uint) (out chan TransactionsJournal, e chan error) {
 	out = make(chan TransactionsJournal)
 	e = make(chan error)
