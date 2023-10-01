@@ -267,7 +267,7 @@ func (client *LimeClient) GetSchedule() (out chan Schedule, e chan error) {
 		defer close(out)
 		defer close(e)
 
-		a, err := httpDo[any, []Quote](client, "GET", nil, nil, "schedule")
+		a, err := httpDo[any, Schedule](client, "GET", nil, nil, "schedule")
 		if err != nil {
 			e <- err
 			return
@@ -312,7 +312,7 @@ func (client *LimeClient) GetOptionSeries(symbol string) (out chan []OptionSerie
 		defer close(out)
 		defer close(e)
 
-		a, err := httpDo[any, SymbolLookupResults](client, "GET", nil, nil, "securities", symbol, "options", "series")
+		a, err := httpDo[any, []OptionSeries](client, "GET", nil, nil, "securities", symbol, "options", "series")
 		if err != nil {
 			e <- err
 			return
