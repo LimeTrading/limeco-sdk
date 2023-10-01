@@ -1,4 +1,4 @@
-module limeco-sdk
+module github.com/danhab99/limeco-sdk
 
 go 1.21.1
 
