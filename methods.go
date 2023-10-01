@@ -82,7 +82,7 @@ func (client *LimeClient) GetAccountTrades(accountNumber uint, date time.Time, l
 	return
 }
 
-// https://docs.lime.co/trader/accounts/get-account-trades
+// https://docs.lime.co/trader/accounts/transactions-journal
 func (client *LimeClient) GetTransactionJournal(accountNumber uint, start, end time.Time, limit, skip uint) (out chan TransactionsJournal, e chan error) {
 	out = make(chan TransactionsJournal)
 	e = make(chan error)
