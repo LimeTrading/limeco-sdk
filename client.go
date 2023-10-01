@@ -2,6 +2,7 @@ package limecosdk
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -9,6 +10,8 @@ import (
 	"net/url"
 	"path"
 	"time"
+
+	"nhooyr.io/websocket"
 )
 
 type LimeClient struct {
@@ -65,4 +68,29 @@ func httpDo[B, R any](client *LimeClient, method string, args url.Values, body B
 	err = json.Unmarshal(bits, &out)
 
 	return
+}
+
+func connect[S ~string](client *LimeClient, endpoint string) (out *LiveMarketData[S], err error) {
+	out.client = client
+
+	ctx, cancel := context.WithTimeout(context.Background(), client.httpClient.Timeout)
+	defer cancel()
+
+	out.ws, _, err = websocket.Dial(ctx, "wss://api.lime.co/"+endpoint, &websocket.DialOptions{
+		CompressionMode: websocket.CompressionContextTakeover,
+		HTTPClient:      client.httpClient,
+		HTTPHeader: http.Header{
+			"Authorization": []string{fmt.Sprintf("Bearer %s", client.apiKey)},
+		},
+	})
+
+	return
+}
+
+func (client *LimeClient) ConnectToMarketData() (out *LiveMarketData[MarketDataAction], err error) {
+	return connect[MarketDataAction](client, "marketData")
+}
+
+func (client *LimeClient) ConnectToAccountsFeed() (out *LiveMarketData[AccountDataAction], err error) {
+	return connect[AccountDataAction](client, "accounts")
 }

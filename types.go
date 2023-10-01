@@ -1,5 +1,11 @@
 package limecosdk
 
+import (
+	"time"
+
+	"nhooyr.io/websocket"
+)
+
 type Account struct {
 	AccountNumber         string  `json:"account_number"`
 	TradePlatform         string  `json:"trade_platform"`
@@ -169,4 +175,95 @@ type OptionSeriesChain struct {
 	Size  uint                    `json:"contract_size"`
 	Style string                  `json:"style"`
 	Chain []OptionSeriesChainItem `json:"chain"`
+}
+
+type Directive struct {
+	Action  string `json:"action"`
+	Account string `json:"account"`
+}
+
+type PositionData struct {
+	Symbol           string  `json:"symbol"`
+	AverageOpenPrice float64 `json:"average_open_price"`
+	CurrentPrice     float64 `json:"current_price"`
+	Quantity         int     `json:"quantity"`
+	SecurityType     string  `json:"security_type"`
+	Account          string  `json:"account"`
+}
+
+type BalanceData struct {
+	AccountNumber        uint    `json:"account_number"`
+	TradePlatform        string  `json:"trade_platform"`
+	MarginType           string  `json:"margin_type"`
+	Restriction          string  `json:"restriction"`
+	AccountValueTotal    float64 `json:"account_value_total"`
+	Cash                 float64 `json:"cash"`
+	MarginBuyingPower    float64 `json:"margin_buying_power"`
+	NonMarginBuyingPower float64 `json:"non_margin_buying_power"`
+	PositionMarketValue  float64 `json:"position_market_value"`
+	UnsettledCash        float64 `json:"unsettled_cash"`
+	CashToWithdraw       float64 `json:"cash_to_withdraw"`
+}
+
+type OrderData struct {
+	AccountNumber     string  `json:"account_number"`
+	ClientID          string  `json:"client_id"`
+	Exchange          string  `json:"exchange"`
+	Quantity          int     `json:"quantity"`
+	ExecutedQuantity  int     `json:"executed_quantity"`
+	OrderStatus       string  `json:"order_status"`
+	Price             float64 `json:"price"`
+	StopPrice         float64 `json:"stop_price"`
+	TimeInForce       string  `json:"time_in_force"`
+	OrderType         string  `json:"order_type"`
+	OrderSide         string  `json:"order_side"`
+	Symbol            string  `json:"symbol"`
+	ExecutedPrice     float64 `json:"executed_price"`
+	Comment           string  `json:"comment"`
+	ExecutedTimestamp int64   `json:"executed_timestamp"`
+}
+
+type TradeData struct {
+	AccountNumber string  `json:"account_number"`
+	Symbol        string  `json:"symbol"`
+	Timestamp     int64   `json:"timestamp"`
+	Quantity      int     `json:"quantity"`
+	Price         float64 `json:"price"`
+	Amount        float64 `json:"amount"`
+	Side          string  `json:"side"`
+}
+
+type LiveMarketData[ActionType ~string] struct {
+	client *LimeClient
+	ws     *websocket.Conn
+}
+
+type MarketData struct {
+	Type             string  `json:"t"`
+	Symbol           string  `json:"s"`
+	LastSize         int     `json:"ls"`
+	LastMarket       string  `json:"lm"`
+	Ask              float64 `json:"a,omitempty"`
+	AskSize          int     `json:"as,omitempty"`
+	Bid              float64 `json:"b,omitempty"`
+	BidSize          int     `json:"bs,omitempty"`
+	Last             float64 `json:"l,omitempty"`
+	High             float64 `json:"high,omitempty"`
+	Low              float64 `json:"low,omitempty"`
+	Open             float64 `json:"open,omitempty"`
+	Close            float64 `json:"close,omitempty"`
+	Change           float64 `json:"change,omitempty"`
+	ChangePercentage float64 `json:"change_pc,omitempty"`
+	Timestamp        int64   `json:"d,omitempty"`
+	Volume           int     `json:"v,omitempty"`
+}
+
+type AccountDataActionCommand struct {
+	Action  AccountDataAction `json:"action"`
+	Account string            `json:"account"`
+}
+
+type MarketDataActionCommand struct {
+	Action  MarketDataAction `json:"action"`
+	Symbols []string         `json:"symbols"`
 }
