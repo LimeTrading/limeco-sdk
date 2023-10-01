@@ -75,6 +75,7 @@ func httpDo[B, R any](client *LimeClient, method string, args url.Values, body B
 }
 
 func connect[S any](client *LimeClient, endpoint string) (out *LiveMarketData[S], err error) {
+	out = new(LiveMarketData[S])
 	out.client = client
 
 	ctx, cancel := context.WithTimeout(context.Background(), client.httpClient.Timeout)
