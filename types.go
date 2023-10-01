@@ -265,7 +265,7 @@ type TradeData struct {
 }
 
 // A connection to the market
-type LiveMarketData[ActionType ~string] struct {
+type LiveMarketData[ActionType any] struct {
 	client *LimeClient
 	ws     *websocket.Conn
 }

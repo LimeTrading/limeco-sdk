@@ -9,7 +9,7 @@ import (
 	"nhooyr.io/websocket"
 )
 
-func listen[S ~string, T any](lmd *LiveMarketData[S]) (in chan S, out chan T, e chan error) {
+func listen[S any, T any](lmd *LiveMarketData[S]) (in chan S, out chan T, e chan error) {
 	in = make(chan S)
 	out = make(chan T)
 	e = make(chan error)
@@ -60,6 +60,6 @@ func listen[S ~string, T any](lmd *LiveMarketData[S]) (in chan S, out chan T, e 
 	return
 }
 
-func (lmd *LiveMarketData[MarketDataAction]) ListenToMarket() (in chan MarketDataActionCommand, out chan MarketData, e chan error) {
+func (lmd *LiveMarketData[MarketDataActionCommand]) ListenToMarket() (in chan MarketDataActionCommand, out chan MarketData, e chan error) {
 	return listen[MarketDataActionCommand, MarketData](lmd)
 }
