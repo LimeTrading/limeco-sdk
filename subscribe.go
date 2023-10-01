@@ -60,6 +60,6 @@ func listen[S ~string, T any](lmd *LiveMarketData[S]) (in chan S, out chan T, e 
 	return
 }
 
-func (lmd *LiveMarketData[MarketDataAction]) ListenToMarket() (in chan MarketDataAction, out chan MarketData, e chan error) {
-	return listen[MarketDataAction, MarketData](lmd)
+func (lmd *LiveMarketData[MarketDataAction]) ListenToMarket() (in chan MarketDataActionCommand, out chan MarketData, e chan error) {
+	return listen[MarketDataActionCommand, MarketData](lmd)
 }
