@@ -1,6 +1,6 @@
-module github.com/danhab99/limeco-sdk
+module github.com/LimeTrading/limeco-sdk
 
-go 1.21.1
+go 1.22.0
 
 require (
 	github.com/klauspost/compress v1.10.3 // indirect
