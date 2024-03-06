@@ -97,16 +97,31 @@ type OrderStatus struct {
 	Data    string `json:"data"`
 }
 
+type TimeInForceValue string
+
+const TIF_Day TimeInForceValue = "day"
+const TIF_AfterMarket TimeInForceValue = "ext"
+
+type MarketOrderType string
+
+const MarketOrderType_Market MarketOrderType = "market"
+const MarketOrderType_Limit MarketOrderType = "limit"
+
+type OrderSide string
+
+const OrderSide_Buy OrderSide = "buy"
+const OrderSide_Sell OrderSide = "sell"
+
 // Represents an order to submit
 type Order struct {
-	AccountNumber string  `json:"account_number"`
-	Symbol        string  `json:"symbol"`
-	Quantity      int     `json:"quantity"`
-	Price         float64 `json:"price"`
-	TimeInForce   string  `json:"time_in_force"`
-	OrderType     string  `json:"order_type"`
-	Side          string  `json:"side"`
-	Exchange      string  `json:"exchange"`
+	AccountNumber string           `json:"account_number"`
+	Symbol        string           `json:"symbol"`
+	Quantity      int              `json:"quantity"`
+	Price         float64          `json:"price"`
+	TimeInForce   TimeInForceValue `json:"time_in_force"`
+	OrderType     MarketOrderType  `json:"order_type"`
+	Side          OrderSide        `json:"side"`
+	Exchange      string           `json:"exchange"`
 }
 
 // Is action valid
